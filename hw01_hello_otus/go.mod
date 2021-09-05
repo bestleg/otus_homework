@@ -1,4 +1,4 @@
-module github.com/bestleg/otus_homework
+module github.com/bestleg/otus_homework/hw01_hello_otus
 
 go 1.16
 

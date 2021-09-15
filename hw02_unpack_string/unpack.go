@@ -8,13 +8,14 @@ import (
 
 var ErrInvalidString = errors.New("invalid string")
 
-const unicodeZero = 0x30
-const emptyString = ""
+const (
+	EmptyString = ""
+	UnicodeZero = 0x30
+)
 
 func Unpack(inputStr string) (string, error) {
-
-	if inputStr == emptyString {
-		return emptyString, nil
+	if inputStr == EmptyString {
+		return EmptyString, nil
 	}
 
 	runes := []rune(inputStr)
@@ -22,19 +23,19 @@ func Unpack(inputStr string) (string, error) {
 	var resultString strings.Builder
 
 	if unicode.IsDigit(runes[0]) {
-		return emptyString, ErrInvalidString
+		return EmptyString, ErrInvalidString
 	}
 
 	for i := 0; i < len(runes[:lenRunes]); i++ {
 		if unicode.IsDigit(runes[i+1]) {
-			resultString.WriteString(strings.Repeat(string(runes[i]), int(runes[i+1])-unicodeZero))
+			resultString.WriteString(strings.Repeat(string(runes[i]), int(runes[i+1])-UnicodeZero))
 			i++
-			if i == lenRunes { //last rune is digit
+			if i == lenRunes { // last rune is digit
 				break
 			}
 			err := check2Digits(runes[i+1])
 			if err != nil {
-				return emptyString, err
+				return EmptyString, err
 			}
 		} else {
 			resultString.WriteRune(runes[i])

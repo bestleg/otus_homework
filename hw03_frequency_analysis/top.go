@@ -1,48 +1,42 @@
 package hw03frequencyanalysis
 
 import (
-	"fmt"
 	"sort"
 	"strings"
 )
 
 func Top10(text string) []string {
-	//tempStr := strings.Replace(text,"\t"," ",-1)
-	//strings.Fields(tempStr," ")
-	//tempStr2 := strings.Split(tempStr," ")
-	tempStr2 := strings.Fields(text)
-	//sort.Strings(tempStr2)
-	//sort.Slice(tempStr2, func(i, j int) bool {
-	//	return tempStr2[i] < tempStr2[j]
-	//})
-	//for _, word := range tempStr2 {
-	//re := regexp.MustCompile(`[[:blank:]]|[[:space:]]`)
-	//word = re.ReplaceAllString(word,"")
-	//fmt.Println(word)
-	//}
+	tempStr := strings.Fields(text)
 	m := make(map[string]int)
-	for _, word := range tempStr2 {
+
+	for _, word := range tempStr {
 		if _, ok := m[word]; !ok {
 			m[word] = 1
 		} else {
 			m[word] = m[word] + 1
 		}
 	}
-	keys := make([]int, 0, len(m))
+
+	values := make([]int, 0, len(m))
 	for _, v := range m {
-		keys = append(keys, v)
+		values = append(values, v)
 	}
-	sort.Ints(keys)
-	RemoveDuplicates(&keys)
-	for _, chislo := range keys {
+	sort.Slice(values, func(i, j int) bool {
+		return values[i] > values[j]
+	})
+	RemoveDuplicates(&values)
+	result := make([]string, 0, len(m))
+	for _, chislo := range values {
+		var tempRes []string
 		for k, v := range m {
 			if v == chislo {
-				fmt.Println(k, m[k])
+				tempRes = append(tempRes, k)
 			}
 		}
+		sort.Strings(tempRes)
+		result = append(result, tempRes...)
 	}
-
-	return nil
+	return result[0:10]
 }
 
 func RemoveDuplicates(xs *[]int) {

@@ -17,6 +17,26 @@ func Top10(text string) []string {
 		}
 	}
 
+	values := SortAndDuplicateValues(m)
+
+	result := make([]string, 0, len(m))
+	for _, value := range values {
+		var tempRes []string
+		for k, v := range m {
+			if v == value {
+				tempRes = append(tempRes, k)
+			}
+		}
+		sort.Strings(tempRes)
+		result = append(result, tempRes...)
+	}
+	if len(result) == 0 {
+		return nil
+	}
+	return result[0:10]
+}
+
+func SortAndDuplicateValues(m map[string]int) []int {
 	values := make([]int, 0, len(m))
 	for _, v := range m {
 		values = append(values, v)
@@ -25,20 +45,8 @@ func Top10(text string) []string {
 		return values[i] > values[j]
 	})
 	RemoveDuplicates(&values)
-	result := make([]string, 0, len(m))
-	for _, chislo := range values {
-		var tempRes []string
-		for k, v := range m {
-			if v == chislo {
-				tempRes = append(tempRes, k)
-			}
-		}
-		sort.Strings(tempRes)
-		result = append(result, tempRes...)
-	}
-	return result[0:10]
+	return values
 }
-
 func RemoveDuplicates(xs *[]int) {
 	found := make(map[int]bool)
 	j := 0

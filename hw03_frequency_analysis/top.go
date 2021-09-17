@@ -8,17 +8,14 @@ import (
 func Top10(text string) []string {
 	tempStr := strings.Fields(text)
 	m := make(map[string]int)
-
 	for _, word := range tempStr {
 		if _, ok := m[word]; !ok {
 			m[word] = 1
 		} else {
-			m[word] = m[word] + 1
+			m[word]++
 		}
 	}
-
 	values := SortAndDuplicateValues(m)
-
 	result := make([]string, 0, len(m))
 	for _, value := range values {
 		var tempRes []string
@@ -47,6 +44,7 @@ func SortAndDuplicateValues(m map[string]int) []int {
 	RemoveDuplicates(&values)
 	return values
 }
+
 func RemoveDuplicates(xs *[]int) {
 	found := make(map[int]bool)
 	j := 0

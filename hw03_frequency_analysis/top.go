@@ -26,11 +26,11 @@ func Top10(text string) []string {
 		}
 		sort.Strings(tempRes)
 		result = append(result, tempRes...)
+		if len(result) == 10 {
+			break
+		}
 	}
-	if len(result) == 0 {
-		return nil
-	}
-	return result[0:10]
+	return result
 }
 
 func SortAndDuplicateValues(m map[string]int) []int {

@@ -17,8 +17,8 @@ func Top10(text string) []string {
 		m[word]++
 	}
 
-	resultStruct := SortValues(m)
-	var result []string
+	resultStruct := sortValues(m)
+	result := make([]string, 0, 10)
 	for i, v := range resultStruct {
 		result = append(result, v.Word)
 		if i == 9 {
@@ -28,7 +28,7 @@ func Top10(text string) []string {
 	return result
 }
 
-func SortValues(m map[string]int) []wordFrequency {
+func sortValues(m map[string]int) []wordFrequency {
 	valuesStruct := make([]wordFrequency, 0, len(m))
 	for word, count := range m {
 		valuesStruct = append(valuesStruct, wordFrequency{

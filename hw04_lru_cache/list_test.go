@@ -56,7 +56,7 @@ func TestList(t *testing.T) {
 		l.PushBack(2.0)
 		elems := make([]interface{}, 0, l.Len())
 		for i := l.Front(); i != nil; i = i.Next {
-			elems = append(elems, i.Value.(interface{}))
+			elems = append(elems, i.Value)
 			l.Remove(i)
 		}
 		require.Equal(t, []interface{}{10, "some string", 2.0}, elems)

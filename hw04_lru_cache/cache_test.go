@@ -66,6 +66,8 @@ func TestCache(t *testing.T) {
 		c.Set("4th", "4th") // 4th second third
 		val, ok = c.Get("4th")
 		require.Equal(t, "4th", val)
+		require.True(t, ok)
+
 		_, ok = c.Get("first") // deleted
 		require.False(t, ok)
 	})

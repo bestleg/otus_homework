@@ -37,5 +37,6 @@ func doneStage(in In, done In) Out {
 			}
 		}
 	}()
+
 	return out
 }

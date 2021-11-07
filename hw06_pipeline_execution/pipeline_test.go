@@ -117,7 +117,7 @@ func TestPipeline(t *testing.T) {
 		require.Equal(t, []string{"Otus homework done!", "My homework done!", "The Best 6th homework homework done!"}, result)
 		require.Less(t,
 			int64(elapsed),
-			// ~0.8s for processing 5 values in 4 stages (100ms every) concurrently
+			// ~0.8s for processing 3 values in 3 stages (100ms every) concurrently
 			int64(sleepPerStage)*int64(len(stages)+len(data)-1)+int64(fault))
 	})
 }

@@ -27,8 +27,8 @@ func TestCopy(t *testing.T) {
 		_ = os.Remove(toTest)
 	})
 	t.Run("limit > file Size", func(t *testing.T) {
-		fi, err := os.Lstat(fromTest)
-		err = Copy(fromTest, toTest, 0, fi.Size()+1000)
+		fi, _ := os.Lstat(fromTest)
+		err := Copy(fromTest, toTest, 0, fi.Size()+1000)
 		require.NoError(t, err)
 		fiFrom, _ := os.Lstat(fromTest)
 		fiTo, _ := os.Lstat(toTest)

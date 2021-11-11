@@ -32,10 +32,13 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 	}
 
 	bar := pb.Full.Start64(limit)
+	defer bar.Finish()
 	bar.SetRefreshRate(10 * time.Millisecond)
 	fileToCopyFrom, err := os.OpenFile(fromPath, os.O_RDONLY, fi.Mode().Perm())
 	barReader := bar.NewProxyReader(fileToCopyFrom)
-	defer fileToCopyFrom.Close()
+	defer func() {
+		err = fileToCopyFrom.Close()
+	}()
 	if err != nil {
 		return err
 	}
@@ -48,15 +51,14 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 	}
 
 	fileToCopyTo, err := os.Create(toPath)
-	defer fileToCopyTo.Close()
+	defer func() {
+		err = fileToCopyTo.Close()
+	}()
 	if err != nil {
 		return err
 	}
 
-	if _, err = io.CopyN(fileToCopyTo, barReader, limit); err != nil {
-		return err
-	}
-	bar.Finish()
+	_, err = io.CopyN(fileToCopyTo, barReader, limit)
 
-	return nil
+	return err
 }

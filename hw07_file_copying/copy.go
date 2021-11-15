@@ -2,6 +2,11 @@ package main
 
 import (
 	"errors"
+	"io"
+	"os"
+	"time"
+
+	"github.com/cheggaaa/pb/v3"
 )
 
 var (
@@ -10,6 +15,50 @@ var (
 )
 
 func Copy(fromPath, toPath string, offset, limit int64) error {
-	// Place your code here.
-	return nil
+	fi, err := os.Lstat(fromPath)
+	if err != nil {
+		return err
+	}
+	if !fi.Mode().IsRegular() {
+		return ErrUnsupportedFile
+	}
+
+	if offset > fi.Size() {
+		return ErrOffsetExceedsFileSize
+	}
+
+	if limit == 0 || offset+limit > fi.Size() {
+		limit = fi.Size() - offset
+	}
+
+	bar := pb.Full.Start64(limit)
+	defer bar.Finish()
+	bar.SetRefreshRate(10 * time.Millisecond)
+	fileToCopyFrom, err := os.OpenFile(fromPath, os.O_RDONLY, fi.Mode().Perm())
+	barReader := bar.NewProxyReader(fileToCopyFrom)
+	defer func() {
+		err = fileToCopyFrom.Close()
+	}()
+	if err != nil {
+		return err
+	}
+
+	if offset != 0 {
+		_, err = fileToCopyFrom.Seek(offset, io.SeekStart)
+		if err != nil {
+			return err
+		}
+	}
+
+	fileToCopyTo, err := os.Create(toPath)
+	defer func() {
+		err = fileToCopyTo.Close()
+	}()
+	if err != nil {
+		return err
+	}
+
+	_, err = io.CopyN(fileToCopyTo, barReader, limit)
+
+	return err
 }

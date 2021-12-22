@@ -1,4 +1,4 @@
-module github.com/bestleg/otus_homewor/hw10_program_optimization
+module github.com/bestleg/otus_homework/hw10_program_optimization
 
 go 1.16
 
